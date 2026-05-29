@@ -1,0 +1,11 @@
+# Vision server (Florence-2) dependencies for Neon Rift
+# Install with:
+#   .\.venv\Scripts\python.exe -m pip install -r requirements_vision.txt
+#
+# For GPU acceleration, install a CUDA build of torch from
+# https://pytorch.org/get-started/locally/ BEFORE running this file.
+torch>=2.2
+transformers>=4.42
+pillow>=10.0
+einops>=0.7
+timm>=0.9

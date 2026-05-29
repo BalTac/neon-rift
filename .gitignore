@@ -1,0 +1,28 @@
+# Python/virtualenv
+.venv/
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Logs and local runtime artifacts
+neon_rift_debug.log
+*.log
+
+# Local user config
+.neon_rift.config.json
+
+# Generated graph artifacts
+graphify-out/
+
+# Raw imported docs/scrapes (local working data)
+raw/
+
+# User music assets and large local datasets
+music/in_game/
+music/C64Audio_OGG/
+music/C64Music_Export/
+music/_tmp_test/
+
+# OS/editor noise
+.DS_Store
+Thumbs.db

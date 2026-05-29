@@ -1,0 +1,7 @@
+{
+  "backend": "ollama",
+  "ollamaBaseUrl": "http://127.0.0.1:11434",
+  "llamaRoot": "C:/path/to/llama",
+  "llamaModel": "C:/path/to/model.gguf",
+  "llamaPort": 8091
+}

@@ -1,0 +1,2 @@
+# No Python runtime dependencies are required for the game server.
+# Runtime stack: Node.js + static HTML/JS.

@@ -1,0 +1,10 @@
+{
+  "name": "In-Game Music Catalog",
+  "description": "Repository-safe default catalog. Add tracks locally with ingest_music_catalog.py.",
+  "exportAudioRoot": "music/in_game",
+  "trackCount": 0,
+  "sidFilter": "psid",
+  "maxTracksRequested": 120,
+  "durationSec": 20,
+  "tracks": []
+}

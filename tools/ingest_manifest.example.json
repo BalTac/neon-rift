@@ -1,0 +1,30 @@
+{
+  "tracks": [
+    {
+      "localPath": "E:/music_pool/NewSong.ogg",
+      "id": "new_song_001",
+      "title": "New Song",
+      "author": "Unknown",
+      "released": "",
+      "platform": "Commodore 64",
+      "format": "OGG",
+      "sourceFormat": "SID",
+      "sidType": "PSID",
+      "songs": 1,
+      "license": "HVSC archive (verify per-track rights before distribution)"
+    },
+    {
+      "remoteUrl": "https://example.com/audio/AnotherSong.ogg",
+      "id": "another_song_002",
+      "title": "Another Song",
+      "author": "Unknown",
+      "released": "",
+      "platform": "Commodore 64",
+      "format": "OGG",
+      "sourceFormat": "SID",
+      "sidType": "PSID",
+      "songs": 1,
+      "license": "HVSC archive (verify per-track rights before distribution)"
+    }
+  ]
+}
