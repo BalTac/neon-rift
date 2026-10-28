@@ -523,6 +523,7 @@ function handleLlmBackends(req, res) {
     ok: true,
     defaultBackend: llmBackend,
     backends: [
+      { id: "heuristic", label: "Euristica locale (Zero LLM / Edge)" },
       { id: "ollama", label: "Ollama" },
       { id: "llamacpp", label: "llama.cpp" }
     ],
@@ -540,10 +541,22 @@ function handleLlmBackends(req, res) {
 }
 
 function handleEngineProxy(req, res) {
-  const match = req.url.match(/^\/llm\/(ollama|llamacpp)(\/.*)?$/);
+  const match = req.url.match(/^\/llm\/(ollama|llamacpp|heuristic)(\/.*)?$/);
   if (!match) return false;
   const engine = match[1];
   const tail = match[2] || "/";
+  if (engine === "heuristic") {
+    if (tail === "/api/tags" || tail === "/v1/models") {
+      sendJson(res, 200, { models: [{ name: "Regole euristiche (Zero LLM)", modified_at: new Date().toISOString() }] });
+      return true;
+    }
+    if (tail === "/api/generate" || tail === "/api/chat" || tail === "/v1/chat/completions") {
+      sendJson(res, 200, { response: "Euristica attiva", message: { content: "Euristica attiva" }, done: true });
+      return true;
+    }
+    sendJson(res, 200, { ok: true, mode: "heuristic" });
+    return true;
+  }
   req.url = `/ollama${tail}`;
   if (engine === "llamacpp") {
     handleOllamaCompat(req, res);
@@ -565,6 +578,15 @@ const server = http.createServer((req, res) => {
   }
 
   if (req.url.startsWith("/ollama/")) {
+    if (llmBackend === "heuristic") {
+      const tail = req.url.replace(/^\/ollama/, "") || "/";
+      if (tail === "/api/tags" || tail === "/v1/models") {
+        sendJson(res, 200, { models: [{ name: "Regole euristiche (Zero LLM)", modified_at: new Date().toISOString() }] });
+        return;
+      }
+      sendJson(res, 200, { response: "Euristica attiva", message: { content: "Euristica attiva" }, done: true });
+      return;
+    }
     if (llmBackend === "llamacpp") {
       handleOllamaCompat(req, res);
     } else {

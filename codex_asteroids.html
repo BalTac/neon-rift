@@ -14,6 +14,8 @@
       --amber: #ffd166;
       --pink: #ff5ea8;
       --panel: rgba(3, 8, 16, .68);
+      --font-mono: ui-monospace, "SF Mono", "Menlo", "Consolas", "Courier New", monospace;
+      --font-sans: "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
     }
 
     * { box-sizing: border-box; }
@@ -494,10 +496,14 @@
     }
 
     .mod-card:hover, .mod-card:focus-visible {
-      outline: none;
       transform: translateY(-2px);
       box-shadow: 0 12px 30px rgba(0,0,0,.55), 0 0 24px rgba(72,231,255,.25);
       border-color: var(--cyan);
+    }
+
+    .mod-card:focus-visible {
+      outline: 2px solid var(--cyan);
+      outline-offset: 3px;
     }
 
     .mod-card h4 {
@@ -527,12 +533,80 @@
     }
 
     button:hover, button:focus-visible {
-      outline: none;
       background: var(--cyan);
       color: #041018;
     }
 
+    button:focus-visible,
+    select:focus-visible,
+    input[type="text"]:focus-visible {
+      outline: 2px solid var(--cyan);
+      outline-offset: 2px;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+      .mod-card:hover, .mod-card:focus-visible {
+        transform: none !important;
+      }
+    }
+
     .hidden { display: none; }
+
+    /* Retro Edge Wireframe Mode (1979 Vector Arcade Style) */
+    body.wireframe-mode {
+      background: #000000 !important;
+    }
+    body.wireframe-mode .hud-deck {
+      gap: 6px !important;
+      font-family: var(--font-mono) !important;
+    }
+    body.wireframe-mode .hud-panel {
+      background: transparent !important;
+      border: 1px solid #ffffff !important;
+      box-shadow: none !important;
+      backdrop-filter: none !important;
+      clip-path: none !important;
+      padding: 4px 8px !important;
+      border-radius: 0 !important;
+    }
+    body.wireframe-mode .hud-pilot { border-color: #ffffff !important; }
+    body.wireframe-mode .hud-rival { border-color: #ffffff !important; }
+    body.wireframe-mode .hud-arena { border-color: #ffffff !important; }
+    body.wireframe-mode .hud-score { color: #ffffff !important; text-shadow: none !important; font-size: 20px !important; }
+    body.wireframe-mode .hud-label, body.wireframe-mode .hud-key, body.wireframe-mode .hud-stat b, body.wireframe-mode label {
+      color: #ffffff !important;
+      text-shadow: none !important;
+    }
+    body.wireframe-mode .bar {
+      border: 1px solid #ffffff !important;
+      background: transparent !important;
+      border-radius: 0 !important;
+    }
+    body.wireframe-mode .bar-fill {
+      background: #ffffff !important;
+      box-shadow: none !important;
+      border-radius: 0 !important;
+    }
+    body.wireframe-mode .hud-tag {
+      background: transparent !important;
+      border: 1px solid #ffffff !important;
+      color: #ffffff !important;
+      border-radius: 0 !important;
+    }
+    body.wireframe-mode .missions-dock {
+      background: #000000 !important;
+      border: 1px solid #ffffff !important;
+      box-shadow: none !important;
+      backdrop-filter: none !important;
+      border-radius: 0 !important;
+      color: #ffffff !important;
+    }
 
     @media (max-width: 760px) {
       .dialog { padding: 22px; }
@@ -599,9 +673,9 @@
     <div id="missionTable" class="mission-grid"></div>
   </aside>
 
-  <div id="menu" class="overlay">
+  <div id="menu" class="overlay" role="dialog" aria-modal="true" aria-labelledby="menuTitle">
     <div class="dialog">
-      <h1>NEON RIFT</h1>
+      <h1 id="menuTitle">NEON RIFT</h1>
       <p id="menuLine1">Asteroids con sprite procedurali, texture rocciose, scie luminose e audio sintetico.</p>
       <p id="menuLine2">Il suono parte al click per rispettare le regole audio di Chrome.</p>
       <div id="matchStats" class="stats-board hidden"></div>
@@ -621,6 +695,7 @@
         </label>
         <label>Motore IA
           <select id="llmEngine">
+            <option value="heuristic">Euristica locale (Zero LLM / Edge)</option>
             <option value="ollama">Ollama</option>
             <option value="llamacpp">llama.cpp</option>
           </select>
@@ -631,6 +706,12 @@
             <option value="normal" selected>Normale</option>
             <option value="hard">Difficile</option>
             <option value="nightmare">Incubo</option>
+          </select>
+        </label>
+        <label>Grafica
+          <select id="graphicsMode">
+            <option value="neon" selected>Neon Rift (Glow & Polvere)</option>
+            <option value="wireframe">Classico Wireframe (Edge Low-Spec)</option>
           </select>
         </label>
         <label>Musica
@@ -655,9 +736,9 @@
       <button id="start">Avvia partita</button>
     </div>
   </div>
-  <div id="guideOverlay" class="overlay hidden" style="z-index:5;">
+  <div id="guideOverlay" class="overlay hidden" style="z-index:5;" role="dialog" aria-modal="true" aria-labelledby="guideTitle">
     <div class="dialog" style="width:min(680px,100%);text-align:left;max-height:90vh;overflow-y:auto;">
-      <h1 style="font-size:clamp(28px,5vw,42px);text-align:center;margin-bottom:6px;">GUIDA</h1>
+      <h1 style="font-size:clamp(28px,5vw,42px);text-align:center;margin-bottom:6px;" id="guideTitle">GUIDA</h1>
       <div class="guide-section">
         <h3>Bonus</h3>
         <div class="guide-grid">
@@ -716,15 +797,15 @@
       </div>
     </div>
   </div>
-  <div id="modifierOverlay" class="overlay hidden" style="z-index:7;">
+  <div id="modifierOverlay" class="overlay hidden" style="z-index:7;" role="dialog" aria-modal="true" aria-labelledby="modifierTitle">
     <div class="dialog" style="width:min(820px,100%);text-align:center;">
-      <h1 style="font-size:clamp(26px,4.5vw,38px);margin-bottom:4px;">MUTATORE</h1>
+      <h1 style="font-size:clamp(26px,4.5vw,38px);margin-bottom:4px;" id="modifierTitle">MUTATORE</h1>
       <p>Ondata <span id="modifierWave">-</span> superata. Tre carte: scegli una build.</p>
       <div id="modifierCards" class="card-grid"></div>
       <p style="color:var(--muted);font-size:12px;">I mutatori si accumulano e durano fino al termine partita.</p>
     </div>
   </div>
-  <div id="endOverlay" class="end-overlay hidden">
+  <div id="endOverlay" class="end-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="endTitle">
     <div class="end-panel">
       <h1 id="endTitle">MATCH REPORT</h1>
       <p id="endSummary">-</p>
@@ -780,6 +861,7 @@
       model: document.querySelector("#model"),
       llmEngine: document.querySelector("#llmEngine"),
       difficulty: document.querySelector("#difficulty"),
+      graphicsMode: document.querySelector("#graphicsMode"),
       musicMode: document.querySelector("#musicMode"),
       musicCatalogUrl: document.querySelector("#musicCatalogUrl"),
       musicTrack: document.querySelector("#musicTrack"),
@@ -829,6 +911,7 @@
       aiModel: "",
       aiName: "IA",
       aiDifficulty: "normal",
+      graphicsMode: localStorage.getItem("neonRiftGraphicsMode") || "neon",
       warmupInFlight: false,
       warmupReady: false,
       warmupSummary: null,
@@ -1851,7 +1934,9 @@
         if (!response.ok) return;
         const data = await response.json();
         const savedEngine = localStorage.getItem("neonRiftAiEngine");
-        if (!savedEngine && (data.defaultBackend === "ollama" || data.defaultBackend === "llamacpp")) {
+        if (savedEngine) {
+          state.aiEngine = savedEngine;
+        } else if (data.defaultBackend) {
           state.aiEngine = data.defaultBackend;
         }
         const backends = Array.isArray(data.backends) ? data.backends : [];
@@ -1987,11 +2072,18 @@
     function setOllamaStatus(text, ok = false) {
       state.ollamaStatus = text;
       state.ollamaOk = ok;
-      const engineLabel = state.aiEngine === "llamacpp" ? "llama.cpp" : "ollama";
+      const engineLabel = state.aiEngine === "heuristic" ? "edge" : state.aiEngine === "llamacpp" ? "llama.cpp" : "ollama";
       ui.llm.textContent = `${engineLabel}:${text}`;
     }
 
     async function loadOllamaModels() {
+      if (state.aiEngine === "heuristic") {
+        ui.model.innerHTML = "<option value=\"heuristic\">Regole euristiche (Zero LLM)</option>";
+        ui.model.value = "heuristic";
+        state.aiModel = "heuristic";
+        setOllamaStatus("edge", true);
+        return;
+      }
       try {
         setOllamaStatus("check", false);
         const previousModel = ui.model.value;
@@ -2120,7 +2212,7 @@
       const eventKey = activeEventKey(reason);
       const fallback = eventKey ? fallbackEventTaunt(eventKey, status) : fallbackTaunt(status);
       rememberEvent(`commento richiesto: ${reason}`);
-      if (!state.aiModel) {
+      if (!state.aiModel || state.aiEngine === "heuristic" || state.aiModel === "heuristic") {
         showTaunt(fallback);
         state.tauntBusy = false;
         return;
@@ -2511,6 +2603,21 @@
       return null;
     }
 
+    let stanceWorker = null;
+    try {
+      if (typeof Worker !== "undefined") {
+        stanceWorker = new Worker("tools/gliclass_worker.js");
+        stanceWorker.postMessage({ type: "INIT", payload: {} });
+        stanceWorker.onmessage = (e) => {
+          if (e.data && e.data.type === "STANCE_RESULT") {
+            applyStance(e.data.stance, e.data.reason + " | worker (" + e.data.latencyMs + "ms)", "(vision disabled)");
+          }
+        };
+      }
+    } catch (_) {
+      stanceWorker = null;
+    }
+
     async function requestStrategy() {
       if (state.strategyBusy) return;
       if (!state.versus || !state.running || state.paused) return;
@@ -2533,9 +2640,29 @@
         const stanceT0 = performance.now();
         const status = state.aiScore > state.score ? "winning" : state.aiScore < state.score ? "losing" : "tied";
 
-        if (!state.aiModel) {
-          const fb = fallbackStance();
-          applyStance(fb.stance, fb.reason + " | no LLM", visionText);
+        if (!state.aiModel || state.aiEngine === "heuristic" || state.aiModel === "heuristic") {
+          if (stanceWorker) {
+            const rock = state.rocks[0];
+            const dist = rock ? Math.hypot(rock.x - (state.aiShip?.x || 0), rock.y - (state.aiShip?.y || 0)) : 999;
+            stanceWorker.postMessage({
+              type: "PREDICT_STANCE",
+              payload: {
+                telemetry: {
+                  playerScore: state.score,
+                  aiScore: state.aiScore,
+                  playerLives: state.lives,
+                  aiLives: state.aiLives,
+                  powerUpPresent: state.powerups.length > 0,
+                  powerUpType: state.powerups[0]?.type || null,
+                  activeEvent: state.arenaEvent?.type || null,
+                  closestRockDist: dist
+                }
+              }
+            });
+          } else {
+            const fb = fallbackStance();
+            applyStance(fb.stance, fb.reason + " | euristica edge", visionText);
+          }
           return;
         }
 
@@ -3288,6 +3415,24 @@
     }
 
     function burst(x, y, color, amount, force) {
+      if (state.graphicsMode === "wireframe") {
+        // Lineette vettoriali minimali stile Asteroids '79
+        const count = Math.min(amount, 8);
+        for (let i = 0; i < count; i++) {
+          const a = (i / count) * TAU;
+          const speed = force * 0.7;
+          state.sparks.push({
+            x, y,
+            vx: Math.cos(a) * speed,
+            vy: Math.sin(a) * speed,
+            life: 0.28,
+            max: 0.28,
+            radius: 1,
+            color: "#ffffff"
+          });
+        }
+        return;
+      }
       for (let i = 0; i < amount; i++) {
         const a = Math.random() * TAU;
         const speed = Math.random() * force;
@@ -3304,6 +3449,7 @@
     }
 
     function shockwave(x, y, color) {
+      if (state.graphicsMode === "wireframe") return; // zero onde d'urto costose in wireframe
       state.shockwaves.push({ x, y, r: 8, life: .42, max: .42, color });
     }
 
@@ -4239,6 +4385,11 @@
     }
 
     function drawBackground(time) {
+      if (state.graphicsMode === "wireframe") {
+        ctx.fillStyle = "#000000";
+        ctx.fillRect(0, 0, innerWidth, innerHeight);
+        return;
+      }
       const drift = time * .000018;
       ctx.fillStyle = "#02050b";
       ctx.fillRect(0, 0, innerWidth, innerHeight);
@@ -4283,6 +4434,33 @@
 
     function drawShip(s) {
       if (s.dead > 0 || (s.invuln > 0 && Math.floor(performance.now() / 90) % 2 === 0)) return;
+
+      if (state.graphicsMode === "wireframe") {
+        ctx.save();
+        ctx.translate(s.x, s.y);
+        ctx.rotate(s.angle);
+        ctx.strokeStyle = s.kind === "hunter" ? "#ff5ea8" : (s.kind === "ai" ? "#ff5ea8" : "#48e7ff");
+        ctx.lineWidth = 1.8;
+        ctx.beginPath();
+        ctx.moveTo(18, 0);
+        ctx.lineTo(-14, -11);
+        ctx.lineTo(-8, 0);
+        ctx.lineTo(-14, 11);
+        ctx.closePath();
+        ctx.stroke();
+
+        const thrusting = (s.kind === "player" && (keys.has("KeyW") || keys.has("ArrowUp"))) || (s.kind !== "player" && Math.hypot(s.vx, s.vy) > 30);
+        if (thrusting) {
+          ctx.strokeStyle = "#ffd166";
+          ctx.beginPath();
+          ctx.moveTo(-9, -5);
+          ctx.lineTo(-19 - Math.random() * 6, 0);
+          ctx.lineTo(-9, 5);
+          ctx.stroke();
+        }
+        ctx.restore();
+        return;
+      }
 
       if (s.kind === "hunter") {
         ctx.save();
@@ -4430,6 +4608,26 @@
       ctx.save();
       ctx.translate(rock.x, rock.y);
       ctx.rotate(rock.angle);
+
+      if (state.graphicsMode === "wireframe") {
+        ctx.strokeStyle = rock.meteor ? "#ff5ea8" : "#f7fbff";
+        ctx.lineWidth = 1.6;
+        ctx.beginPath();
+        const verts = rock.verts;
+        for (let i = 0; i <= verts.length; i++) {
+          const idx = i % verts.length;
+          const a = (idx / verts.length) * TAU;
+          const r = rock.radius * verts[idx];
+          const rx = Math.cos(a) * r;
+          const ry = Math.sin(a) * r;
+          if (i === 0) ctx.moveTo(rx, ry);
+          else ctx.lineTo(rx, ry);
+        }
+        ctx.closePath();
+        ctx.stroke();
+        ctx.restore();
+        return;
+      }
       if (rock.meteor) {
         const tail = rock.radius * 2.4;
         const backX = -Math.cos(rock.angle) * tail;
@@ -4469,15 +4667,18 @@
 
     function drawPowerup(p, time) {
       const def = powerupDefs[p.type];
-      const pulse = 1 + Math.sin(time * .006 + p.t * 8) * .12;
+      const isWire = state.graphicsMode === "wireframe";
+      const pulse = isWire ? 1 : 1 + Math.sin(time * .006 + p.t * 8) * .12;
       ctx.save();
       ctx.translate(p.x, p.y);
-      ctx.rotate(time * .001 + p.t * .7);
-      ctx.globalCompositeOperation = "lighter";
-      ctx.shadowColor = def.color;
-      ctx.shadowBlur = 18;
-      ctx.strokeStyle = def.color;
-      ctx.lineWidth = 2.1;
+      if (!isWire) {
+        ctx.rotate(time * .001 + p.t * .7);
+        ctx.globalCompositeOperation = "lighter";
+        ctx.shadowColor = def.color;
+        ctx.shadowBlur = 18;
+      }
+      ctx.strokeStyle = isWire ? "#ffd166" : def.color;
+      ctx.lineWidth = isWire ? 1.4 : 2.1;
 
       if (p.type === "lifeup") {
         ctx.beginPath();
@@ -4559,6 +4760,15 @@
       for (const p of state.powerups) drawPowerup(p, time);
 
       for (const beam of state.laserBeams) {
+        if (state.graphicsMode === "wireframe") {
+          ctx.strokeStyle = beam.owner === "ai" ? "#ff5ea8" : "#ffffff";
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          ctx.moveTo(beam.x1, beam.y1);
+          ctx.lineTo(beam.x2, beam.y2);
+          ctx.stroke();
+          continue;
+        }
         const alpha = clamp(beam.life / beam.max, 0, 1);
         const radiusScale = beam.radiusScale || 1;
         ctx.globalCompositeOperation = "lighter";
@@ -4587,7 +4797,10 @@
         ctx.moveTo(b.px, b.py);
         ctx.lineTo(b.x, b.y);
         ctx.stroke();
-        if (b.style === "circle") {
+        if (state.graphicsMode === "wireframe") {
+          ctx.fillStyle = "#ffffff";
+          ctx.fillRect(b.x - 1.5, b.y - 1.5, 3, 3);
+        } else if (b.style === "circle") {
           ctx.fillStyle = "rgba(212,166,255,.95)";
           ctx.beginPath();
           ctx.arc(b.x, b.y, 4.4, 0, TAU);
@@ -4597,17 +4810,24 @@
         }
       }
 
-      for (const p of state.sparks) {
-        ctx.globalAlpha = clamp(p.life / p.max, 0, 1);
-        ctx.fillStyle = p.color;
-        ctx.shadowColor = p.color;
-        ctx.shadowBlur = 12;
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.radius, 0, TAU);
-        ctx.fill();
+      if (state.graphicsMode === "wireframe") {
+        ctx.fillStyle = "#ffffff";
+        for (const p of state.sparks) {
+          ctx.fillRect(p.x, p.y, 2, 2);
+        }
+      } else {
+        for (const p of state.sparks) {
+          ctx.globalAlpha = clamp(p.life / p.max, 0, 1);
+          ctx.fillStyle = p.color;
+          ctx.shadowColor = p.color;
+          ctx.shadowBlur = 12;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.radius, 0, TAU);
+          ctx.fill();
+        }
+        ctx.shadowBlur = 0;
+        ctx.globalAlpha = 1;
       }
-      ctx.shadowBlur = 0;
-      ctx.globalAlpha = 1;
 
       for (const w of state.shockwaves) {
         const alpha = clamp(w.life / w.max, 0, 1);
@@ -4866,7 +5086,9 @@
         const previousLabel = ui.start.textContent;
         ui.start.textContent = "Warmup modelli...";
         try {
-          await warmupInferencePipeline(state.aiModel);
+          if (state.aiEngine !== "heuristic" && state.aiModel !== "heuristic") {
+            await warmupInferencePipeline(state.aiModel);
+          }
         } finally {
           ui.start.disabled = false;
           ui.start.textContent = previousLabel;
@@ -5014,6 +5236,19 @@
         await loadOllamaModels();
       });
     }
+    function applyGraphicsMode() {
+      const isWire = state.graphicsMode === "wireframe";
+      document.body.classList.toggle("wireframe-mode", isWire);
+    }
+    if (ui.graphicsMode) {
+      ui.graphicsMode.value = state.graphicsMode;
+      ui.graphicsMode.addEventListener("change", () => {
+        state.graphicsMode = ui.graphicsMode.value;
+        localStorage.setItem("neonRiftGraphicsMode", state.graphicsMode);
+        applyGraphicsMode();
+      });
+      applyGraphicsMode();
+    }
     ui.musicMode.addEventListener("change", () => {
       state.musicMode = ui.musicMode.value;
       localStorage.setItem("neonRiftMusicMode", state.musicMode);
@@ -5035,6 +5270,16 @@
       keys.add(event.code);
       if (event.code === "Space") shoot(state.ship);
       if (event.code === "AltLeft" || event.code === "AltRight") emitLaser(state.ship);
+      if (event.code === "Escape") {
+        if (!ui.guideOverlay.classList.contains("hidden")) {
+          ui.guideOverlay.classList.add("hidden");
+          return;
+        }
+        if (!ui.endOverlay.classList.contains("hidden")) {
+          ui.endOverlay.classList.add("hidden");
+          return;
+        }
+      }
       if (event.code === "KeyP" && state.running && !state.modifierPick) state.paused = !state.paused;
       if (event.code === "KeyM") setMuted(!state.muted);
       if (["Space", "AltLeft", "AltRight", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(event.code)) {
@@ -5055,8 +5300,11 @@
     state.rivalry = loadRivalryProfile();
     state.medalsLifetime = loadMedalsLifetime();
     renderHiscoreBoard();
-    if (ui.llmEngine) ui.llmEngine.value = state.aiEngine;
-    loadLlmBackends();
+    (async () => {
+      await loadLlmBackends();
+      if (ui.llmEngine) ui.llmEngine.value = state.aiEngine;
+      await loadOllamaModels();
+    })();
     ui.musicMode.value = state.musicMode;
     ui.musicCatalogUrl.value = state.musicCatalogUrl;
     loadMusicCatalog(state.musicCatalogUrl);
@@ -5064,7 +5312,6 @@
     state.aiShip = makeShip("ai");
     ui.missionLine.textContent = state.rivalry ? `Rivalità: ${state.rivalry.title} · XP ${state.rivalry.xp} · W/L ${state.rivalry.wins}/${state.rivalry.losses}` : "";
     updateHud();
-    loadOllamaModels();
     requestAnimationFrame(loop);
   </script>
 </body>

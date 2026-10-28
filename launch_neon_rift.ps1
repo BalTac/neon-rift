@@ -184,11 +184,13 @@ function Invoke-SetupWizard([hashtable]$seedCfg, [bool]$showEntryMenu = $false) 
     Write-Host "1) auto"
     Write-Host "2) ollama"
     Write-Host "3) llamacpp"
+    Write-Host "4) Euristica locale (Zero LLM / Edge)"
 
-    $choice = Read-Host "Scegli backend [1-3] (default 1)"
+    $choice = Read-Host "Scegli backend [1-4] (default 1)"
     $backend = "auto"
     if ($choice -eq "2") { $backend = "ollama" }
     if ($choice -eq "3") { $backend = "llamacpp" }
+    if ($choice -eq "4") { $backend = "heuristic" }
 
     $cfg = @{}
     $cfg.backend = $backend
@@ -243,6 +245,11 @@ function Resolve-Backend([hashtable]$baseCfg, [bool]$interactiveFallback) {
 
     $ollamaOk = Test-OllamaBaseUrl $ollamaUrl
     $llamaReady = ($llamaExe -and $llamaModel)
+
+    if ($backend -eq "heuristic") {
+        $resolved.backend = "heuristic"
+        return $resolved
+    }
 
     if ($backend -eq "ollama" -and $ollamaOk) {
         $resolved.backend = "ollama"

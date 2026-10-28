@@ -4,11 +4,20 @@ Browser game prototype (`codex_asteroids.html`) with local AI/LLM integrations, 
 
 ## What Is Included
 
-- Game frontend: `codex_asteroids.html`
+- Game frontend: `codex_asteroids.html` (supporta sia la modalità visiva completa *Neon Rift* che la modalità *Classico Wireframe* per hardware edge / low-spec)
 - Local Node server/proxy: `neon_rift_server.js`
+- Edge AI & Decision tooling:
+  - `tools/gliclass_worker.js`: Web Worker in-browser per la classificazione tattica System 1 (zero lag, 60 FPS)
+  - `tools/export_gliclass_onnx.py`: Script di esportazione e quantizzazione INT8 per modelli GLiClass
 - Optional Python vision service: `vision_server.py`
-- Music ingest CLI: `ingest_music_catalog.py` (launcher) and `tools/ingest_music_catalog.py`
+- Music ingest CLI: `ingest_music_catalog.py` (launcher) e `tools/ingest_music_catalog.py`
 - Default repo-safe catalog: `music/music_catalog_c64_ogg_subset.json`
+
+## Modalità Edge & Low-Spec (Zero LLM)
+
+Per eseguire Neon Rift su macchine a basse risorse o mini-PC senza GPU dedicata:
+- **Motore IA / Backend**: Selezionare `Euristica locale (Zero LLM / Edge)` nel lanciatore o nel menu impostazioni in-game. Bypassa completamente i server Ollama / llama.cpp e gestisce i commenti e le decisioni tattiche tramite regole contestuali e Web Worker a latenza <1ms.
+- **Grafica Wireframe**: Selezionare `Classico Wireframe (Edge Low-Spec)` per disattivare gradienti radiali, sfocature, particellari pesanti e onde d'urto, sostituendo le navette e gli asteroidi con una fedele grafica vettoriale stile arcade 1979 e dashboard monocromatica.
 
 ## What Is Excluded From Git
 
