@@ -1,0 +1,338 @@
+{
+  "name": "HVSC Top C64 SID Catalog",
+  "tracks": [
+    {
+      "id": "arkanoid",
+      "title": "Arkanoid",
+      "author": "Martin Galway",
+      "path": "MUSICIANS/G/Galway_Martin/Arkanoid.sid",
+      "url": "https://www.hvsc.c64.org/C64Music/MUSICIANS/G/Galway_Martin/Arkanoid.sid",
+      "platform": "C64 (SID)",
+      "license": "HVSC Archive"
+    },
+    {
+      "id": "armalyte",
+      "title": "Armalyte",
+      "author": "Martin Walker",
+      "path": "MUSICIANS/W/Walker_Martin/Armalyte.sid",
+      "url": "https://www.hvsc.c64.org/C64Music/MUSICIANS/W/Walker_Martin/Armalyte.sid",
+      "platform": "C64 (SID)",
+      "license": "HVSC Archive"
+    },
+    {
+      "id": "auf_wiedersehen_monty",
+      "title": "Auf Wiedersehen Monty",
+      "author": "Rob Hubbard",
+      "path": "MUSICIANS/H/Hubbard_Rob/Auf_Wiedersehen_Monty.sid",
+      "url": "https://www.hvsc.c64.org/C64Music/MUSICIANS/H/Hubbard_Rob/Auf_Wiedersehen_Monty.sid",
+      "platform": "C64 (SID)",
+      "license": "HVSC Archive"
+    },
+    {
+      "id": "battle_valley",
+      "title": "Battle Valley",
+      "author": "Jeroen Tel",
+      "path": "MUSICIANS/T/Tel_Jeroen/Battle_Valley.sid",
+      "url": "https://www.hvsc.c64.org/C64Music/MUSICIANS/T/Tel_Jeroen/Battle_Valley.sid",
+      "platform": "C64 (SID)",
+      "license": "HVSC Archive"
+    },
+    {
+      "id": "cobra",
+      "title": "Cobra",
+      "author": "Ben Daglish",
+      "path": "MUSICIANS/D/Daglish_Ben/Cobra.sid",
+      "url": "https://www.hvsc.c64.org/C64Music/MUSICIANS/D/Daglish_Ben/Cobra.sid",
+      "platform": "C64 (SID)",
+      "license": "HVSC Archive"
+    },
+    {
+      "id": "commando",
+      "title": "Commando",
+      "author": "Rob Hubbard",
+      "path": "MUSICIANS/H/Hubbard_Rob/Commando.sid",
+      "url": "https://www.hvsc.c64.org/C64Music/MUSICIANS/H/Hubbard_Rob/Commando.sid",
+      "platform": "C64 (SID)",
+      "license": "HVSC Archive"
+    },
+    {
+      "id": "crazy_comets",
+      "title": "Crazy Comets",
+      "author": "Rob Hubbard",
+      "path": "MUSICIANS/H/Hubbard_Rob/Crazy_Comets.sid",
+      "url": "https://www.hvsc.c64.org/C64Music/MUSICIANS/H/Hubbard_Rob/Crazy_Comets.sid",
+      "platform": "C64 (SID)",
+      "license": "HVSC Archive"
+    },
+    {
+      "id": "cybernoid",
+      "title": "Cybernoid",
+      "author": "Jeroen Tel",
+      "path": "MUSICIANS/T/Tel_Jeroen/Cybernoid.sid",
+      "url": "https://www.hvsc.c64.org/C64Music/MUSICIANS/T/Tel_Jeroen/Cybernoid.sid",
+      "platform": "C64 (SID)",
+      "license": "HVSC Archive"
+    },
+    {
+      "id": "cybernoid_ii",
+      "title": "Cybernoid II",
+      "author": "Jeroen Tel",
+      "path": "MUSICIANS/T/Tel_Jeroen/Cybernoid_II.sid",
+      "url": "https://www.hvsc.c64.org/C64Music/MUSICIANS/T/Tel_Jeroen/Cybernoid_II.sid",
+      "platform": "C64 (SID)",
+      "license": "HVSC Archive"
+    },
+    {
+      "id": "deflektor",
+      "title": "Deflektor",
+      "author": "Ben Daglish",
+      "path": "MUSICIANS/D/Daglish_Ben/Deflektor.sid",
+      "url": "https://www.hvsc.c64.org/C64Music/MUSICIANS/D/Daglish_Ben/Deflektor.sid",
+      "platform": "C64 (SID)",
+      "license": "HVSC Archive"
+    },
+    {
+      "id": "delta",
+      "title": "Delta",
+      "author": "Rob Hubbard",
+      "path": "MUSICIANS/H/Hubbard_Rob/Delta.sid",
+      "url": "https://www.hvsc.c64.org/C64Music/MUSICIANS/H/Hubbard_Rob/Delta.sid",
+      "platform": "C64 (SID)",
+      "license": "HVSC Archive"
+    },
+    {
+      "id": "ghosts_n_goblins",
+      "title": "Ghosts n Goblins",
+      "author": "Mark Cooksey",
+      "path": "MUSICIANS/C/Cooksey_Mark/Ghosts_n_Goblins.sid",
+      "url": "https://www.hvsc.c64.org/C64Music/MUSICIANS/C/Cooksey_Mark/Ghosts_n_Goblins.sid",
+      "platform": "C64 (SID)",
+      "license": "HVSC Archive"
+    },
+    {
+      "id": "green_beret",
+      "title": "Green Beret",
+      "author": "Martin Galway",
+      "path": "MUSICIANS/G/Galway_Martin/Green_Beret.sid",
+      "url": "https://www.hvsc.c64.org/C64Music/MUSICIANS/G/Galway_Martin/Green_Beret.sid",
+      "platform": "C64 (SID)",
+      "license": "HVSC Archive"
+    },
+    {
+      "id": "hawkeye",
+      "title": "Hawkeye",
+      "author": "Jeroen Tel",
+      "path": "MUSICIANS/T/Tel_Jeroen/Hawkeye.sid",
+      "url": "https://www.hvsc.c64.org/C64Music/MUSICIANS/T/Tel_Jeroen/Hawkeye.sid",
+      "platform": "C64 (SID)",
+      "license": "HVSC Archive"
+    },
+    {
+      "id": "international_karate",
+      "title": "International Karate",
+      "author": "Rob Hubbard",
+      "path": "MUSICIANS/H/Hubbard_Rob/International_Karate.sid",
+      "url": "https://www.hvsc.c64.org/C64Music/MUSICIANS/H/Hubbard_Rob/International_Karate.sid",
+      "platform": "C64 (SID)",
+      "license": "HVSC Archive"
+    },
+    {
+      "id": "katakis",
+      "title": "Katakis",
+      "author": "Chris Huelsbeck",
+      "path": "MUSICIANS/H/Huelsbeck_Chris/Katakis.sid",
+      "url": "https://www.hvsc.c64.org/C64Music/MUSICIANS/H/Huelsbeck_Chris/Katakis.sid",
+      "platform": "C64 (SID)",
+      "license": "HVSC Archive"
+    },
+    {
+      "id": "knucklebusters",
+      "title": "Knucklebusters",
+      "author": "Rob Hubbard",
+      "path": "MUSICIANS/H/Hubbard_Rob/Knucklebusters.sid",
+      "url": "https://www.hvsc.c64.org/C64Music/MUSICIANS/H/Hubbard_Rob/Knucklebusters.sid",
+      "platform": "C64 (SID)",
+      "license": "HVSC Archive"
+    },
+    {
+      "id": "last_ninja_2",
+      "title": "Last Ninja 2 - Central Park",
+      "author": "Matt Gray",
+      "path": "MUSICIANS/G/Gray_Matt/Last_Ninja_2.sid",
+      "url": "https://www.hvsc.c64.org/C64Music/MUSICIANS/G/Gray_Matt/Last_Ninja_2.sid",
+      "platform": "C64 (SID)",
+      "license": "HVSC Archive"
+    },
+    {
+      "id": "last_ninja_3",
+      "title": "Last Ninja 3",
+      "author": "Reyn Ouwehand",
+      "path": "MUSICIANS/O/Ouwehand_Reyn/Last_Ninja_3.sid",
+      "url": "https://www.hvsc.c64.org/C64Music/MUSICIANS/O/Ouwehand_Reyn/Last_Ninja_3.sid",
+      "platform": "C64 (SID)",
+      "license": "HVSC Archive"
+    },
+    {
+      "id": "monty_on_the_run",
+      "title": "Monty on the Run",
+      "author": "Rob Hubbard",
+      "path": "MUSICIANS/H/Hubbard_Rob/Monty_on_the_Run.sid",
+      "url": "https://www.hvsc.c64.org/C64Music/MUSICIANS/H/Hubbard_Rob/Monty_on_the_Run.sid",
+      "platform": "C64 (SID)",
+      "license": "HVSC Archive"
+    },
+    {
+      "id": "mutants",
+      "title": "Mutants",
+      "author": "Fred Gray",
+      "path": "MUSICIANS/G/Gray_Fred/Mutants.sid",
+      "url": "https://www.hvsc.c64.org/C64Music/MUSICIANS/G/Gray_Fred/Mutants.sid",
+      "platform": "C64 (SID)",
+      "license": "HVSC Archive"
+    },
+    {
+      "id": "myth",
+      "title": "Myth: History in the Making",
+      "author": "Jeroen Tel",
+      "path": "MUSICIANS/T/Tel_Jeroen/Myth.sid",
+      "url": "https://www.hvsc.c64.org/C64Music/MUSICIANS/T/Tel_Jeroen/Myth.sid",
+      "platform": "C64 (SID)",
+      "license": "HVSC Archive"
+    },
+    {
+      "id": "nemesis_the_warlock",
+      "title": "Nemesis the Warlock",
+      "author": "Rob Hubbard",
+      "path": "MUSICIANS/H/Hubbard_Rob/Nemesis_the_Warlock.sid",
+      "url": "https://www.hvsc.c64.org/C64Music/MUSICIANS/H/Hubbard_Rob/Nemesis_the_Warlock.sid",
+      "platform": "C64 (SID)",
+      "license": "HVSC Archive"
+    },
+    {
+      "id": "paperboy",
+      "title": "Paperboy",
+      "author": "Mark Cooksey",
+      "path": "MUSICIANS/C/Cooksey_Mark/Paperboy.sid",
+      "url": "https://www.hvsc.c64.org/C64Music/MUSICIANS/C/Cooksey_Mark/Paperboy.sid",
+      "platform": "C64 (SID)",
+      "license": "HVSC Archive"
+    },
+    {
+      "id": "r-type",
+      "title": "R-Type",
+      "author": "Chris Huelsbeck",
+      "path": "MUSICIANS/H/Huelsbeck_Chris/R-Type.sid",
+      "url": "https://www.hvsc.c64.org/C64Music/MUSICIANS/H/Huelsbeck_Chris/R-Type.sid",
+      "platform": "C64 (SID)",
+      "license": "HVSC Archive"
+    },
+    {
+      "id": "rambo",
+      "title": "Rambo: First Blood Part II",
+      "author": "Martin Galway",
+      "path": "MUSICIANS/G/Galway_Martin/Rambo_First_Blood_Part_II.sid",
+      "url": "https://www.hvsc.c64.org/C64Music/MUSICIANS/G/Galway_Martin/Rambo_First_Blood_Part_II.sid",
+      "platform": "C64 (SID)",
+      "license": "HVSC Archive"
+    },
+    {
+      "id": "sanxion",
+      "title": "Sanxion",
+      "author": "Rob Hubbard",
+      "path": "MUSICIANS/H/Hubbard_Rob/Sanxion.sid",
+      "url": "https://www.hvsc.c64.org/C64Music/MUSICIANS/H/Hubbard_Rob/Sanxion.sid",
+      "platform": "C64 (SID)",
+      "license": "HVSC Archive"
+    },
+    {
+      "id": "stormlord",
+      "title": "Stormlord",
+      "author": "Johannes Bjerregaard",
+      "path": "MUSICIANS/B/Bjerregaard_Johannes/Stormlord.sid",
+      "url": "https://www.hvsc.c64.org/C64Music/MUSICIANS/B/Bjerregaard_Johannes/Stormlord.sid",
+      "platform": "C64 (SID)",
+      "license": "HVSC Archive"
+    },
+    {
+      "id": "supremacy",
+      "title": "Supremacy",
+      "author": "Jeroen Tel",
+      "path": "MUSICIANS/T/Tel_Jeroen/Supremacy.sid",
+      "url": "https://www.hvsc.c64.org/C64Music/MUSICIANS/T/Tel_Jeroen/Supremacy.sid",
+      "platform": "C64 (SID)",
+      "license": "HVSC Archive"
+    },
+    {
+      "id": "great_giana_sisters",
+      "title": "The Great Giana Sisters",
+      "author": "Chris Huelsbeck",
+      "path": "MUSICIANS/H/Huelsbeck_Chris/Great_Giana_Sisters.sid",
+      "url": "https://www.hvsc.c64.org/C64Music/MUSICIANS/H/Huelsbeck_Chris/Great_Giana_Sisters.sid",
+      "platform": "C64 (SID)",
+      "license": "HVSC Archive"
+    },
+    {
+      "id": "last_ninja",
+      "title": "The Last Ninja",
+      "author": "Ben Daglish",
+      "path": "MUSICIANS/D/Daglish_Ben/Last_Ninja.sid",
+      "url": "https://www.hvsc.c64.org/C64Music/MUSICIANS/D/Daglish_Ben/Last_Ninja.sid",
+      "platform": "C64 (SID)",
+      "license": "HVSC Archive"
+    },
+    {
+      "id": "thrust",
+      "title": "Thrust",
+      "author": "Rob Hubbard",
+      "path": "MUSICIANS/H/Hubbard_Rob/Thrust.sid",
+      "url": "https://www.hvsc.c64.org/C64Music/MUSICIANS/H/Hubbard_Rob/Thrust.sid",
+      "platform": "C64 (SID)",
+      "license": "HVSC Archive"
+    },
+    {
+      "id": "trap",
+      "title": "Trap",
+      "author": "Ben Daglish",
+      "path": "MUSICIANS/D/Daglish_Ben/Trap.sid",
+      "url": "https://www.hvsc.c64.org/C64Music/MUSICIANS/D/Daglish_Ben/Trap.sid",
+      "platform": "C64 (SID)",
+      "license": "HVSC Archive"
+    },
+    {
+      "id": "turrican",
+      "title": "Turrican",
+      "author": "Chris Huelsbeck",
+      "path": "MUSICIANS/H/Huelsbeck_Chris/Turrican.sid",
+      "url": "https://www.hvsc.c64.org/C64Music/MUSICIANS/H/Huelsbeck_Chris/Turrican.sid",
+      "platform": "C64 (SID)",
+      "license": "HVSC Archive"
+    },
+    {
+      "id": "turrican_ii",
+      "title": "Turrican II",
+      "author": "Chris Huelsbeck",
+      "path": "MUSICIANS/H/Huelsbeck_Chris/Turrican_II.sid",
+      "url": "https://www.hvsc.c64.org/C64Music/MUSICIANS/H/Huelsbeck_Chris/Turrican_II.sid",
+      "platform": "C64 (SID)",
+      "license": "HVSC Archive"
+    },
+    {
+      "id": "wizball",
+      "title": "Wizball",
+      "author": "Martin Galway",
+      "path": "MUSICIANS/G/Galway_Martin/Wizball.sid",
+      "url": "https://www.hvsc.c64.org/C64Music/MUSICIANS/G/Galway_Martin/Wizball.sid",
+      "platform": "C64 (SID)",
+      "license": "HVSC Archive"
+    },
+    {
+      "id": "zoids",
+      "title": "Zoids",
+      "author": "Rob Hubbard",
+      "path": "MUSICIANS/H/Hubbard_Rob/Zoids.sid",
+      "url": "https://www.hvsc.c64.org/C64Music/MUSICIANS/H/Hubbard_Rob/Zoids.sid",
+      "platform": "C64 (SID)",
+      "license": "HVSC Archive"
+    }
+  ]
+}

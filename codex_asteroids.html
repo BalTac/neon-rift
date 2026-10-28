@@ -613,6 +613,7 @@
       .setup { grid-template-columns: 1fr; }
     }
   </style>
+  <script src="tools/jsSID.js"></script>
 </head>
 <body>
   <canvas id="game" aria-label="Asteroids Neon Rift"></canvas>
@@ -716,17 +717,27 @@
         </label>
         <label>Musica
           <select id="musicMode">
-            <option value="synth" selected>Synth interna</option>
-            <option value="catalog">Catalogo chip online</option>
+            <option value="synth">Synth interna</option>
+            <option value="catalog" selected>Catalogo chip online / SID</option>
             <option value="off">Off</option>
           </select>
         </label>
-        <label>Catalogo URL (JSON)
-          <input id="musicCatalogUrl" class="wide" type="text" value="music/music_catalog_c64_ogg_subset.json" placeholder="https://.../catalog.json">
+        <label>Motore SID
+          <select id="sidEngine">
+            <option value="jssid" selected>jsSID (Edge / Ultra-Light)</option>
+            <option value="audio">Audio nativo (OGG/MP3)</option>
+          </select>
         </label>
-        <label class="wide">Traccia
+        <label class="wide">Cerca brani C64 / HVSC (Autocomplete)
+          <input id="sidSearchInput" list="sidSuggestions" type="text" placeholder="Scrivi es. Commando, Last Ninja, Cybernoid, Huelsbeck...">
+          <datalist id="sidSuggestions"></datalist>
+        </label>
+        <label>Catalogo URL (JSON)
+          <input id="musicCatalogUrl" class="wide" type="text" value="music/hvsc_top_index.json" placeholder="https://.../catalog.json">
+        </label>
+        <label class="wide">Traccia attiva / I Miei Brani
           <select id="musicTrack">
-            <option value="">Carica catalogo...</option>
+            <option value="">Caricamento tracce...</option>
           </select>
         </label>
       </div>
@@ -865,6 +876,9 @@
       musicMode: document.querySelector("#musicMode"),
       musicCatalogUrl: document.querySelector("#musicCatalogUrl"),
       musicTrack: document.querySelector("#musicTrack"),
+      sidEngine: document.querySelector("#sidEngine"),
+      sidSearchInput: document.querySelector("#sidSearchInput"),
+      sidSuggestions: document.querySelector("#sidSuggestions"),
       missionLine: document.querySelector("#missionLine"),
       missionsDock: document.querySelector("#missionsDock"),
       missionProgress: document.querySelector("#missionProgress"),
@@ -999,7 +1013,7 @@
       postMatchVerdict: "",
       llmNotes: loadLlmNotes(),
       musicMode: localStorage.getItem("neonRiftMusicMode") || "synth",
-      musicCatalogUrl: localStorage.getItem("neonRiftMusicCatalogUrl") || "music/music_catalog_c64_ogg_subset.json",
+      musicCatalogUrl: localStorage.getItem("neonRiftMusicCatalogUrl") || "music/hvsc_top_index.json",
       musicTrackId: localStorage.getItem("neonRiftMusicTrackId") || "__random__",
       musicTracks: [],
       hiscores: loadHiscores()
@@ -1843,10 +1857,16 @@
       });
     }
 
+    let sidPlayerInstance = null;
+
     function stopExternalMusic() {
-      if (!audio.bgm) return;
-      audio.bgm.pause();
-      audio.bgm.src = "";
+      if (audio.bgm) {
+        audio.bgm.pause();
+        audio.bgm.src = "";
+      }
+      if (sidPlayerInstance && typeof sidPlayerInstance.pause === "function") {
+        sidPlayerInstance.pause();
+      }
     }
 
     function playExternalTrackById(trackId) {
@@ -1855,10 +1875,27 @@
         : trackId;
       const track = state.musicTracks.find(t => t.id === resolvedTrackId);
       if (!track) return;
-      ensureBgm();
-      audio.bgm.src = track.url;
-      audio.bgm.loop = state.musicTrackId !== "__random__";
-      audio.bgm.play().catch(() => {});
+
+      stopExternalMusic();
+
+      const isSid = (track.url && track.url.toLowerCase().endsWith(".sid")) || (track.path && track.path.toLowerCase().endsWith(".sid"));
+      const useJsSid = isSid && state.sidEngine !== "audio" && typeof jsSID !== "undefined";
+
+      if (useJsSid) {
+        if (!sidPlayerInstance) {
+          sidPlayerInstance = new jsSID(16384, 0.0005);
+        }
+        // Usa il proxy locale con cache su disco
+        const proxyUrl = `${location.origin}/api/sid-proxy?path=${encodeURIComponent(track.path || track.url)}`;
+        sidPlayerInstance.setvolume(state.muted ? 0 : 0.75);
+        sidPlayerInstance.loadstart(proxyUrl, 0);
+      } else {
+        ensureBgm();
+        audio.bgm.src = track.url;
+        audio.bgm.loop = state.musicTrackId !== "__random__";
+        audio.bgm.play().catch(() => {});
+      }
+
       state.musicTrackId = state.musicTrackId === "__random__" ? "__random__" : track.id;
       localStorage.setItem("neonRiftMusicTrackId", state.musicTrackId);
     }
@@ -5254,8 +5291,57 @@
       localStorage.setItem("neonRiftMusicMode", state.musicMode);
       applyMusicMode();
     });
+    if (ui.sidEngine) {
+      state.sidEngine = localStorage.getItem("neonRiftSidEngine") || "jssid";
+      ui.sidEngine.value = state.sidEngine;
+      ui.sidEngine.addEventListener("change", () => {
+        state.sidEngine = ui.sidEngine.value;
+        localStorage.setItem("neonRiftSidEngine", state.sidEngine);
+        if (state.musicMode === "catalog" && state.running) applyMusicMode();
+      });
+    }
+
+    // Autocomplete e ricerca catalogo C64 / HVSC
+    if (ui.sidSearchInput && ui.sidSuggestions) {
+      ui.sidSearchInput.addEventListener("input", () => {
+        const query = ui.sidSearchInput.value.trim().toLowerCase();
+        ui.sidSuggestions.innerHTML = "";
+        if (!query || query.length < 2) return;
+
+        const matches = state.musicTracks.filter(t =>
+          (t.title && t.title.toLowerCase().includes(query)) ||
+          (t.author && t.author.toLowerCase().includes(query)) ||
+          (t.id && t.id.toLowerCase().includes(query))
+        ).slice(0, 15);
+
+        for (const m of matches) {
+          const opt = document.createElement("option");
+          opt.value = m.title || m.id;
+          opt.textContent = `${m.author || "C64"} - ${m.title || m.id}`;
+          opt.dataset.trackId = m.id;
+          ui.sidSuggestions.appendChild(opt);
+        }
+      });
+
+      ui.sidSearchInput.addEventListener("change", () => {
+        const val = ui.sidSearchInput.value.trim().toLowerCase();
+        const found = state.musicTracks.find(t =>
+          (t.title && t.title.toLowerCase() === val) ||
+          (t.id && t.id.toLowerCase() === val)
+        );
+        if (found) {
+          state.musicTrackId = found.id;
+          if (ui.musicTrack) ui.musicTrack.value = found.id;
+          localStorage.setItem("neonRiftMusicTrackId", state.musicTrackId);
+          if (state.musicMode === "catalog") {
+            applyMusicMode();
+          }
+        }
+      });
+    }
+
     ui.musicCatalogUrl.addEventListener("change", async () => {
-      state.musicCatalogUrl = ui.musicCatalogUrl.value.trim() || "music/music_catalog_c64_ogg_subset.json";
+      state.musicCatalogUrl = ui.musicCatalogUrl.value.trim() || "music/hvsc_top_index.json";
       localStorage.setItem("neonRiftMusicCatalogUrl", state.musicCatalogUrl);
       await loadMusicCatalog(state.musicCatalogUrl);
       if (state.musicMode === "catalog" && state.running) applyMusicMode();

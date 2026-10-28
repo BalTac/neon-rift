@@ -625,6 +625,61 @@ const server = http.createServer((req, res) => {
     return;
   }
 
+  // Proxy per file SID con cache locale (risolve problemi di CORS verso hvsc.c64.org)
+  if (req.url.startsWith("/api/sid-proxy")) {
+    const parsedUrl = new URL(req.url, `http://${req.headers.host}`);
+    const sidPath = parsedUrl.searchParams.get("path");
+    if (!sidPath) {
+      sendJson(res, 400, { error: "Parametro path mancante" });
+      return;
+    }
+    // Percorso cache locale su disco
+    const cacheDir = path.join(root, "music", "in_game", "sid_cache");
+    const safeFilename = sidPath.replace(/[^a-zA-Z0-9._-]/g, "_");
+    const cachedFile = path.join(cacheDir, safeFilename);
+
+    if (fs.existsSync(cachedFile)) {
+      fs.readFile(cachedFile, (err, data) => {
+        if (!err) {
+          send(res, 200, {
+            "content-type": "application/octet-stream",
+            "access-control-allow-origin": "*",
+            "x-sid-source": "local-cache"
+          }, data);
+          return;
+        }
+      });
+      return;
+    }
+
+    // Se non in cache, fetch da HVSC e salvataggio
+    const remoteUrl = sidPath.startsWith("http") ? sidPath : `https://www.hvsc.c64.org/C64Music/${sidPath.replace(/^\/+/, "")}`;
+    const client = remoteUrl.startsWith("https") ? https : http;
+    client.get(remoteUrl, { headers: { "user-agent": "NeonRift/1.0" } }, remoteRes => {
+      if (remoteRes.statusCode !== 200) {
+        sendJson(res, remoteRes.statusCode, { error: `Errore download SID da HVSC: HTTP ${remoteRes.statusCode}` });
+        return;
+      }
+      const chunks = [];
+      remoteRes.on("data", c => chunks.push(c));
+      remoteRes.on("end", () => {
+        const sidBuffer = Buffer.concat(chunks);
+        try {
+          if (!fs.existsSync(cacheDir)) fs.mkdirSync(cacheDir, { recursive: true });
+          fs.writeFileSync(cachedFile, sidBuffer);
+        } catch (_) {}
+        send(res, 200, {
+          "content-type": "application/octet-stream",
+          "access-control-allow-origin": "*",
+          "x-sid-source": "remote-fetched"
+        }, sidBuffer);
+      });
+    }).on("error", err => {
+      sendJson(res, 502, { error: `Impossibile raggiungere HVSC: ${err.message}` });
+    });
+    return;
+  }
+
   if (req.url === "/debug/status") {
     send(res, 200, { "content-type": "application/json" }, JSON.stringify({
       ok: true,
