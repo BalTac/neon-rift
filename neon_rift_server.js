@@ -625,6 +625,59 @@ const server = http.createServer((req, res) => {
     return;
   }
 
+  // Elenco dei cataloghi / database JSON presenti nella cartella music/
+  if (req.url === "/api/music/catalogs") {
+    const musicDir = path.join(root, "music");
+    fs.readdir(musicDir, (err, files) => {
+      if (err) {
+        sendJson(res, 200, { catalogs: [] });
+        return;
+      }
+      const list = files
+        .filter(f => f.endsWith(".json"))
+        .map(f => ({ name: f, path: `music/${f}` }));
+      sendJson(res, 200, { catalogs: list });
+    });
+    return;
+  }
+
+  // Ricerca globale nel database SQLite dei 62.000+ brani HVSC
+  if (req.url.startsWith("/api/music/search")) {
+    const parsedUrl = new URL(req.url, `http://${req.headers.host}`);
+    const q = (parsedUrl.searchParams.get("q") || "").trim();
+    if (!q || q.length < 2) {
+      sendJson(res, 200, { results: [] });
+      return;
+    }
+    // Esecuzione query rapida via processo python integrato
+    const dbPath = path.join(root, "music", "hvsc_catalog.sqlite");
+    if (!fs.existsSync(dbPath)) {
+      sendJson(res, 200, { results: [] });
+      return;
+    }
+    const pyScript = `import sqlite3, json, sys
+conn = sqlite3.connect(sys.argv[1])
+cur = conn.cursor()
+q = '%' + sys.argv[2] + '%'
+cur.execute("SELECT id, title, author, released, path, url FROM tracks WHERE title LIKE ? OR author LIKE ? ORDER BY CASE WHEN title LIKE ? THEN 1 ELSE 2 END, title LIMIT 30", (q, q, sys.argv[2] + '%'))
+rows = cur.fetchall()
+res = [{"id": r[0], "title": r[1], "author": r[2], "released": r[3], "path": r[4], "url": r[5], "platform": "C64 (SID)", "license": "HVSC Archive"} for r in rows]
+print(json.dumps(res))`;
+
+    const py = childProcess.spawn("python", ["-c", pyScript, dbPath, q]);
+    let out = "";
+    py.stdout.on("data", d => out += d);
+    py.on("close", code => {
+      try {
+        const results = JSON.parse(out || "[]");
+        sendJson(res, 200, { results });
+      } catch (_) {
+        sendJson(res, 200, { results: [] });
+      }
+    });
+    return;
+  }
+
   // Proxy per file SID con cache locale (risolve problemi di CORS verso hvsc.c64.org)
   if (req.url.startsWith("/api/sid-proxy")) {
     const parsedUrl = new URL(req.url, `http://${req.headers.host}`);

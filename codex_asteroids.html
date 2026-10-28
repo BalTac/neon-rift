@@ -717,28 +717,39 @@
         </label>
         <label>Musica
           <select id="musicMode">
-            <option value="synth">Synth interna</option>
             <option value="catalog" selected>Catalogo chip online / SID</option>
+            <option value="synth">Synth interna</option>
             <option value="off">Off</option>
           </select>
         </label>
         <label>Motore SID
           <select id="sidEngine">
-            <option value="jssid" selected>jsSID (Edge / Ultra-Light)</option>
-            <option value="audio">Audio nativo (OGG/MP3)</option>
+            <option value="jssid" selected>jsSID (Edge / Pure JS ~15KB)</option>
+            <option value="libsidplayfp">libsidplayfp (WASM Cycle-Accurate)</option>
+            <option value="audio">Audio nativo browser (OGG/MP3)</option>
           </select>
         </label>
-        <label class="wide">Cerca brani C64 / HVSC (Autocomplete)
-          <input id="sidSearchInput" list="sidSuggestions" type="text" placeholder="Scrivi es. Commando, Last Ninja, Cybernoid, Huelsbeck...">
-          <datalist id="sidSuggestions"></datalist>
+        <label>Seleziona Catalogo / Database
+          <select id="catalogSelector">
+            <option value="music/hvsc_top_index.json">HVSC Top C64 (JSON)</option>
+            <option value="music/music_catalog_c64_ogg_subset.json">Subset Locale OGG (JSON)</option>
+          </select>
         </label>
-        <label>Catalogo URL (JSON)
+        <label>Catalogo URL (JSON o Custom)
           <input id="musicCatalogUrl" class="wide" type="text" value="music/hvsc_top_index.json" placeholder="https://.../catalog.json">
         </label>
-        <label class="wide">Traccia attiva / I Miei Brani
-          <select id="musicTrack">
-            <option value="">Caricamento tracce...</option>
-          </select>
+        <label class="wide">Cerca tra i 62.000+ brani HVSC (Autocomplete)
+          <input id="sidSearchInput" list="sidSuggestions" type="text" placeholder="Scrivi es. Commando, Giana, Turrican, Galway, Hubbard...">
+          <datalist id="sidSuggestions"></datalist>
+        </label>
+        <label class="wide">Traccia attiva / Playlist
+          <div style="display:flex;gap:6px;align-items:center;">
+            <select id="musicTrack" style="flex:1;">
+              <option value="">Caricamento tracce...</option>
+            </select>
+            <button id="previewMusicBtn" type="button" style="margin:0;padding:8px 14px;font-size:12px;">▶ Ascolta</button>
+            <button id="openJukeboxBtn" type="button" style="margin:0;padding:8px 14px;font-size:12px;background:linear-gradient(180deg,#1c3d52,#081b29);">📻 Jukebox</button>
+          </div>
         </label>
       </div>
       <p id="missionLine" class="hidden"></p>
@@ -816,6 +827,31 @@
       <p style="color:var(--muted);font-size:12px;">I mutatori si accumulano e durano fino al termine partita.</p>
     </div>
   </div>
+  <!-- Modale Jukebox C64 Retro -->
+  <div id="jukeboxOverlay" class="overlay hidden" style="z-index:6;" role="dialog" aria-modal="true" aria-labelledby="jukeboxTitle">
+    <div class="dialog" style="width:min(640px, 98%);text-align:left;">
+      <h1 id="jukeboxTitle" style="font-size:clamp(24px, 4vw, 36px);margin-bottom:8px;text-align:center;">C64 SID JUKEBOX</h1>
+      <p style="text-align:center;margin:0 0 12px;color:var(--muted);font-size:13px;">Player integrato con accesso a oltre 62.000 brani dell'archivio HVSC</p>
+      <div style="display:grid;gap:10px;">
+        <input id="jbSearch" type="text" placeholder="Cerca titolo, autore o demogroup...">
+        <div id="jbTrackList" style="max-height:240px;overflow-y:auto;border:1px solid rgba(72,231,255,.3);background:rgba(2,6,12,.8);padding:6px;font:700 12px var(--font-mono);"></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:8px;border:1px solid rgba(157,255,143,.3);background:rgba(4,14,24,.6);border-radius:4px;">
+          <div>
+            <div id="jbNowPlayingTitle" style="font-weight:900;color:var(--cyan);">Nessun brano in riproduzione</div>
+            <div id="jbNowPlayingAuthor" style="font-size:11px;color:var(--muted);">-</div>
+          </div>
+          <div style="display:flex;gap:6px;">
+            <button id="jbTogglePlay" type="button" style="margin:0;padding:8px 16px;">▶ Play</button>
+            <button id="jbAddToFav" type="button" style="margin:0;padding:8px 12px;background:#133526;border-color:var(--lime);color:var(--lime);">★ Preferiti</button>
+          </div>
+        </div>
+      </div>
+      <div class="end-actions" style="margin-top:14px;text-align:center;">
+        <button id="jbClose" type="button" style="margin:0;">Chiudi</button>
+      </div>
+    </div>
+  </div>
+
   <div id="endOverlay" class="end-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="endTitle">
     <div class="end-panel">
       <h1 id="endTitle">MATCH REPORT</h1>
@@ -879,6 +915,17 @@
       sidEngine: document.querySelector("#sidEngine"),
       sidSearchInput: document.querySelector("#sidSearchInput"),
       sidSuggestions: document.querySelector("#sidSuggestions"),
+      catalogSelector: document.querySelector("#catalogSelector"),
+      previewMusicBtn: document.querySelector("#previewMusicBtn"),
+      openJukeboxBtn: document.querySelector("#openJukeboxBtn"),
+      jukeboxOverlay: document.querySelector("#jukeboxOverlay"),
+      jbSearch: document.querySelector("#jbSearch"),
+      jbTrackList: document.querySelector("#jbTrackList"),
+      jbNowPlayingTitle: document.querySelector("#jbNowPlayingTitle"),
+      jbNowPlayingAuthor: document.querySelector("#jbNowPlayingAuthor"),
+      jbTogglePlay: document.querySelector("#jbTogglePlay"),
+      jbAddToFav: document.querySelector("#jbAddToFav"),
+      jbClose: document.querySelector("#jbClose"),
       missionLine: document.querySelector("#missionLine"),
       missionsDock: document.querySelector("#missionsDock"),
       missionProgress: document.querySelector("#missionProgress"),
@@ -4476,7 +4523,7 @@
         ctx.save();
         ctx.translate(s.x, s.y);
         ctx.rotate(s.angle);
-        ctx.strokeStyle = s.kind === "hunter" ? "#ff5ea8" : (s.kind === "ai" ? "#ff5ea8" : "#48e7ff");
+        ctx.strokeStyle = s.kind === "hunter" ? "#5a6270" : (s.kind === "ai" ? "#ff5ea8" : "#48e7ff");
         ctx.lineWidth = 1.8;
         ctx.beginPath();
         ctx.moveTo(18, 0);
@@ -4506,8 +4553,8 @@
         const scale = 1.1;
         ctx.scale(scale, scale);
         ctx.globalCompositeOperation = "source-over";
-        ctx.fillStyle = "#2f343c";
-        ctx.strokeStyle = "#9ba4b2";
+        ctx.fillStyle = "#1e2228"; // Grigio scuro opaco
+        ctx.strokeStyle = "#4a525d"; // Contorno grigio scuro
         ctx.lineWidth = 2.2;
         ctx.beginPath();
         ctx.moveTo(26, 0);
@@ -4798,7 +4845,7 @@
 
       for (const beam of state.laserBeams) {
         if (state.graphicsMode === "wireframe") {
-          ctx.strokeStyle = beam.owner === "ai" ? "#ff5ea8" : "#ffffff";
+          ctx.strokeStyle = beam.owner === "hunter" ? "#5a6270" : (beam.owner === "ai" ? "#ff5ea8" : "#ffffff");
           ctx.lineWidth = 2;
           ctx.beginPath();
           ctx.moveTo(beam.x1, beam.y1);
@@ -5291,13 +5338,148 @@
       localStorage.setItem("neonRiftMusicMode", state.musicMode);
       applyMusicMode();
     });
+    let isPreviewPlaying = false;
+
+    function updatePreviewBtnState() {
+      if (!ui.previewMusicBtn) return;
+      ui.previewMusicBtn.textContent = isPreviewPlaying ? "⏸ Pausa" : "▶ Ascolta";
+    }
+
+    if (ui.previewMusicBtn) {
+      ui.previewMusicBtn.addEventListener("click", () => {
+        if (isPreviewPlaying) {
+          stopExternalMusic();
+          isPreviewPlaying = false;
+        } else {
+          ensureAudio();
+          playExternalTrackById(ui.musicTrack.value || state.musicTrackId);
+          isPreviewPlaying = true;
+        }
+        updatePreviewBtnState();
+      });
+    }
+
+    // Caricamento dinamico dei cataloghi JSON disponibili dal server
+    async function populateCatalogSelector() {
+      if (!ui.catalogSelector) return;
+      try {
+        const resp = await fetch("/api/music/catalogs");
+        if (resp.ok) {
+          const data = await resp.json();
+          if (data && Array.isArray(data.catalogs) && data.catalogs.length) {
+            ui.catalogSelector.innerHTML = "";
+            for (const cat of data.catalogs) {
+              const opt = document.createElement("option");
+              opt.value = cat.path;
+              opt.textContent = cat.name.replace(".json", "").replace(/_/g, " ").toUpperCase();
+              ui.catalogSelector.appendChild(opt);
+            }
+            if (state.musicCatalogUrl) ui.catalogSelector.value = state.musicCatalogUrl;
+          }
+        }
+      } catch (_) {}
+    }
+
+    if (ui.catalogSelector) {
+      ui.catalogSelector.addEventListener("change", async () => {
+        ui.musicCatalogUrl.value = ui.catalogSelector.value;
+        state.musicCatalogUrl = ui.catalogSelector.value;
+        localStorage.setItem("neonRiftMusicCatalogUrl", state.musicCatalogUrl);
+        await loadMusicCatalog(state.musicCatalogUrl);
+        if (isPreviewPlaying) playExternalTrackById(state.musicTrackId);
+      });
+    }
+
+    // Gestione Jukebox Modale
+    function renderJukeboxList(tracks) {
+      if (!ui.jbTrackList) return;
+      ui.jbTrackList.innerHTML = "";
+      if (!tracks.length) {
+        ui.jbTrackList.innerHTML = "<div style='color:var(--muted);padding:8px;'>Nessun brano trovato</div>";
+        return;
+      }
+      for (const t of tracks) {
+        const row = document.createElement("div");
+        row.style.cssText = "display:flex;justify-content:space-between;align-items:center;padding:5px 6px;cursor:pointer;border-bottom:1px solid rgba(255,255,255,.07);";
+        row.innerHTML = `<span style="color:#d8e7f9;">${t.title || t.id}</span><span style="color:var(--muted);font-size:11px;">${t.author || "C64"}</span>`;
+        row.addEventListener("click", () => {
+          ensureAudio();
+          ui.jbNowPlayingTitle.textContent = t.title || t.id;
+          ui.jbNowPlayingAuthor.textContent = `${t.author || "C64"} (${t.released || ""})`;
+          state.musicTrackId = t.id;
+          if (!state.musicTracks.some(existing => existing.id === t.id)) {
+            state.musicTracks.push(t);
+            const opt = document.createElement("option");
+            opt.value = t.id;
+            opt.textContent = `${t.title} (${t.author})`;
+            ui.musicTrack.appendChild(opt);
+          }
+          ui.musicTrack.value = t.id;
+          playExternalTrackById(t.id);
+          isPreviewPlaying = true;
+          updatePreviewBtnState();
+          ui.jbTogglePlay.textContent = "⏸ Pausa";
+        });
+        ui.jbTrackList.appendChild(row);
+      }
+    }
+
+    if (ui.openJukeboxBtn) {
+      ui.openJukeboxBtn.addEventListener("click", () => {
+        ui.jukeboxOverlay.classList.remove("hidden");
+        renderJukeboxList(state.musicTracks.slice(0, 50));
+      });
+    }
+    if (ui.jbClose) {
+      ui.jbClose.addEventListener("click", () => ui.jukeboxOverlay.classList.add("hidden"));
+    }
+    if (ui.jbTogglePlay) {
+      ui.jbTogglePlay.addEventListener("click", () => {
+        if (isPreviewPlaying) {
+          stopExternalMusic();
+          isPreviewPlaying = false;
+          ui.jbTogglePlay.textContent = "▶ Play";
+        } else {
+          ensureAudio();
+          playExternalTrackById(state.musicTrackId);
+          isPreviewPlaying = true;
+          ui.jbTogglePlay.textContent = "⏸ Pausa";
+        }
+        updatePreviewBtnState();
+      });
+    }
+
+    // Ricerca live nel Jukebox verso SQLite
+    let jbDebounce = null;
+    if (ui.jbSearch) {
+      ui.jbSearch.addEventListener("input", () => {
+        clearTimeout(jbDebounce);
+        const q = ui.jbSearch.value.trim();
+        if (!q || q.length < 2) {
+          renderJukeboxList(state.musicTracks.slice(0, 50));
+          return;
+        }
+        jbDebounce = setTimeout(async () => {
+          try {
+            const resp = await fetch(`/api/music/search?q=${encodeURIComponent(q)}`);
+            if (resp.ok) {
+              const data = await resp.json();
+              renderJukeboxList(data.results || []);
+            }
+          } catch (_) {}
+        }, 220);
+      });
+    }
+
     if (ui.sidEngine) {
       state.sidEngine = localStorage.getItem("neonRiftSidEngine") || "jssid";
       ui.sidEngine.value = state.sidEngine;
       ui.sidEngine.addEventListener("change", () => {
         state.sidEngine = ui.sidEngine.value;
         localStorage.setItem("neonRiftSidEngine", state.sidEngine);
-        if (state.musicMode === "catalog" && state.running) applyMusicMode();
+        if (isPreviewPlaying || (state.musicMode === "catalog" && state.running)) {
+          applyMusicMode();
+        }
       });
     }
 
@@ -5361,6 +5543,10 @@
           ui.guideOverlay.classList.add("hidden");
           return;
         }
+        if (ui.jukeboxOverlay && !ui.jukeboxOverlay.classList.contains("hidden")) {
+          ui.jukeboxOverlay.classList.add("hidden");
+          return;
+        }
         if (!ui.endOverlay.classList.contains("hidden")) {
           ui.endOverlay.classList.add("hidden");
           return;
@@ -5387,6 +5573,7 @@
     state.medalsLifetime = loadMedalsLifetime();
     renderHiscoreBoard();
     (async () => {
+      await populateCatalogSelector();
       await loadLlmBackends();
       if (ui.llmEngine) ui.llmEngine.value = state.aiEngine;
       await loadOllamaModels();
