@@ -1,5 +1,9 @@
 # Asteroids Neon Rift
 
+<p align="center">
+  <img src="docs/neon_rift_banner.png" alt="Asteroids Neon Rift Banner" width="100%">
+</p>
+
 Browser game prototype (`codex_asteroids.html`) with local AI/LLM integrations, optional vision server, and local music ingest tooling.
 
 ## What Is Included
